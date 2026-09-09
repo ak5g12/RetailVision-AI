@@ -269,7 +269,7 @@ const trainMlModel = async (req, res) => {
     const token = req.headers.authorization?.split(' ')[1];
     
     // Call Python ML service on port 8000
-    const mlResponse = await axios.post('http://127.0.0.1:8000/api/forecast/train', {
+    const mlResponse = await axios.post(`${process.env.ML_SERVICE_URL}/api/forecast/train`, {
       token: token
     });
     
@@ -332,7 +332,7 @@ const predictDemand = async (req, res) => {
     const features = { day_of_week, month, day, qty_lag_1, qty_lag_7 };
     
     const axios = require('axios');
-    const mlResponse = await axios.post('http://127.0.0.1:8000/api/forecast/predict', features);
+    const mlResponse = await axios.post(`${process.env.ML_SERVICE_URL}/api/forecast/predict`, features);
     
     const predicted_quantity = mlResponse.data.predicted_quantity;
     
@@ -575,10 +575,10 @@ const getCustomerSegmentation = async (req, res) => {
     try {
       const axios = require('axios');
       if (req.query.train === 'true') {
-        await axios.post('http://127.0.0.1:8000/api/segmentation/train', { customers: customersPayload });
+        await axios.post(`${process.env.ML_SERVICE_URL}/api/segmentation/train`, { customers: customersPayload });
       }
       
-      const mlRes = await axios.post('http://127.0.0.1:8000/api/segmentation/predict', { customers: customersPayload });
+      const mlRes = await axios.post(`${process.env.ML_SERVICE_URL}/api/segmentation/predict`, { customers: customersPayload });
       segments = mlRes.data.predictions;
       
       const result = customersPayload.map(c => {
@@ -639,10 +639,10 @@ const getSalesAnomalies = async (req, res) => {
       const axios = require('axios');
       // If client requested train
       if (req.query.train === 'true') {
-        await axios.post('http://127.0.0.1:8000/api/anomaly/train', { data: payload });
+        await axios.post(`${process.env.ML_SERVICE_URL}/api/anomaly/train`, { data: payload });
       }
       
-      const mlRes = await axios.post('http://127.0.0.1:8000/api/anomaly/predict', { data: payload });
+      const mlRes = await axios.post(`${process.env.ML_SERVICE_URL}/api/anomaly/predict`, { data: payload });
       
       // Calculate a simple baseline (average of last 14 days) to give context
       const recentData = payload.slice(-14);
