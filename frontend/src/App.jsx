@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { AuthProvider, AuthContext } from './context/AuthContext';
 import MainLayout from './layouts/MainLayout';
 import WorkspaceLayout from './layouts/WorkspaceLayout';
@@ -33,6 +33,7 @@ const Unauthorized = () => <div className="p-8 text-red-500"><h2>Unauthorized</h
 
 const GlobalAuthModal = () => {
   const [isOpen, setIsOpen] = React.useState(false);
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     const handleAuthError = () => {
@@ -51,7 +52,7 @@ const GlobalAuthModal = () => {
         <p className="text-muted mb-6">Please sign in to your RetailVision_AI account to continue your intelligent retail experience.</p>
         <div className="flex justify-center gap-4">
           <button className="btn-outline" onClick={() => setIsOpen(false)}>Continue Shopping</button>
-          <a href="/login" className="btn-primary" onClick={() => setIsOpen(false)}>Sign In</a>
+          <button className="btn-primary" onClick={() => { setIsOpen(false); navigate('/login'); }}>Sign In</button>
         </div>
       </div>
     </div>
@@ -61,8 +62,8 @@ const GlobalAuthModal = () => {
 function App() {
   return (
     <AuthProvider>
-      <GlobalAuthModal />
       <Router>
+        <GlobalAuthModal />
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />

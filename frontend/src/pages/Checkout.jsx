@@ -10,6 +10,8 @@ const Checkout = () => {
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState('');
+  const [coupons, setCoupons] = useState([]);
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
   const buyNowItem = location.state?.buyNowItem;
